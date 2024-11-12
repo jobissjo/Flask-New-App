@@ -1,7 +1,7 @@
 from app import create_app
 
 app = create_app()
-
+print(app)
 @app.route('/')
 def index():
     return 'Hello from Flask!'
