@@ -19,3 +19,13 @@ def create_user(data):
     db.session.add(new_user)
     db.session.commit()
     return new_user, None, 200
+
+def authenticate_user(email, password):
+    user = User.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password, password):
+        return user
+    return None
+
+
+def get_user_by_user_id(user_id):
+    return User.query.get(user_id)
