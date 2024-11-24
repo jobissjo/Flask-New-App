@@ -2,6 +2,7 @@ from app import db
 from app.models.bus import Bus
 from app.utils.common import get_country_code
 
+
 class BusService:
     @staticmethod
     def generate_bus_unique_id(country, state, district, city, bus_number):
@@ -12,27 +13,29 @@ class BusService:
         state_code = state[:3].upper()
         district_code = district[:3].upper()
         city_code = city[:3].upper()
-        
+
         # Concatenate to form the unique ID
-        bus_unique_id = f"{country_code}{state_code}{district_code}{city_code}{bus_number}"
-        
+        bus_unique_id = (
+            f"{country_code}{state_code}{district_code}{city_code}{bus_number}"
+        )
+
         # Ensure it doesn't exceed 16 characters
         return bus_unique_id[:16]
 
     @staticmethod
     def create_bus(data):
         # Generate bus_unique_id
-        data['bus_unique_id'] = BusService.generate_bus_unique_id(
-            country=data['country'],
-            state=data['state'],
-            district=data['district'],
-            city=data['city'],
-            bus_number=data['bus_number']
+        data["bus_unique_id"] = BusService.generate_bus_unique_id(
+            country=data["country"],
+            state=data["state"],
+            district=data["district"],
+            city=data["city"],
+            bus_number=data["bus_number"],
         )
         # Check if bus_unique_id already exists
-        if Bus.query.filter_by(bus_unique_id=data['bus_unique_id']).first():
+        if Bus.query.filter_by(bus_unique_id=data["bus_unique_id"]).first():
             raise ValueError("Bus unique ID already exists.")
-        
+
         # Create and save the bus
         bus = Bus(**data)
         db.session.add(bus)

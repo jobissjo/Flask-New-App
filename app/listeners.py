@@ -5,6 +5,7 @@ from app import db
 
 @listens_for(User, 'after_insert')
 def create_profile(mapper, connection, target):
+    print(target)
     profile = Profile(user_id=target.id)
     db.session.add(profile)
     db.session.commit()
