@@ -21,8 +21,10 @@ def create_app():
     # Import routes after db initialization to avoid circular imports
     from app.routes.auth_routes import auth_router
     from app.routes.profile_routes import profile_router
+    from app.routes.bus_routes import bus_router
 
     app.register_blueprint(auth_router, url_prefix='/api/auth')
     app.register_blueprint(profile_router, url_prefix='/api/profile')
+    app.register_blueprint(bus_router, url_prefix='/api/bus')
 
     return app

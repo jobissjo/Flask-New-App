@@ -1,5 +1,5 @@
 from app import db
-from app.models.bus import Bus
+from app.models.bus import Bus, BusRoute, RouteStop
 from app.utils.common import get_country_code
 
 
@@ -68,3 +68,58 @@ class BusService:
         db.session.delete(bus)
         db.session.commit()
         return True
+
+
+
+class BusRouteService:
+
+    @staticmethod
+    def create_bus_route(data):
+        # Create a new BusRoute instance with the provided data
+        route = BusRoute(**data)
+        try:
+            db.session.add(route)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            raise e
+        return route
+
+    @staticmethod
+    def get_bus_routes():
+        # Return all bus routes
+        return BusRoute.query.all()
+
+    @staticmethod
+    def get_bus_route_by_id(route_id):
+        # Fetch a bus route by its ID
+        return BusRoute.query.get(route_id)
+
+    @staticmethod
+    def update_bus_route(route_id, data):
+        # Fetch the bus route by its ID
+        bus_route = BusRoute.query.get(route_id)
+        if not bus_route:
+            return None  # Return None if the route is not found
+        try:
+            for key, value in data.items():
+                setattr(bus_route, key, value)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            raise e
+        return bus_route
+
+    @staticmethod
+    def delete_bus_route(route_id):
+        # Fetch the bus route by its ID
+        bus_route = BusRoute.query.get(route_id)
+        if not bus_route:
+            return False  # Return False if the route is not found
+        try:
+            db.session.delete(bus_route)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            raise e
+        return True  # Return True if the route was successfully deleted

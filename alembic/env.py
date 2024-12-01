@@ -1,17 +1,9 @@
 from logging.config import fileConfig
-from main import app
-
-
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-
-
-
-# Set the database URL for Alembic using Flask's configuration
-context.config.set_main_option('sqlalchemy.url', app.config['SQLALCHEMY_DATABASE_URI'])
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,9 +18,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app import db
-target_metadata = db.metadata
-
+target_metadata = None
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

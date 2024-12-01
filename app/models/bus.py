@@ -10,11 +10,13 @@ class Bus(db.Model):
     country = db.Column(db.String(100), nullable=False)
     state = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(100), nullable=False)
-
-    bus_unique_id = db.Column(db.String(16), unique=True nullable=False)
+    district = db.Column(db.String(100), nullable=False)
+    bus_unique_id = db.Column(db.String(16), unique=True, nullable=False)
+    
 
     # Relationships
     route = db.relationship('BusRoute', back_populates='buses')
+    stops = db.relationship('RouteStop', back_populates='bus', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"<Bus {self.bus_number} - {self.city} - {self.state} - {self.country}>"
@@ -33,7 +35,6 @@ class BusRoute(db.Model):
     
     # Relationships
     buses = db.relationship('Bus', back_populates='route', cascade='all, delete-orphan')
-    stops = db.relationship('RouteStop', back_populates='route', order_by='RouteStop.order')
 
     def __repr__(self):
         return f"<BusRoute {self.route_name}>"
@@ -44,11 +45,10 @@ class RouteStop(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     stop_name = db.Column(db.String(100), nullable=False)
-    order = db.Column(db.Integer, nullable=False)  # To track the order of stops
-    route_id = db.Column(db.Integer, db.ForeignKey('bus_routes.id'), nullable=False)
+    order = db.Column(db.Integer, nullable=False)
+    bus_id = db.Column(db.Integer, db.ForeignKey('buses.id'), nullable=True) 
 
-    # Relationships
-    route = db.relationship('BusRoute', back_populates='stops')
+    bus   = db.relationship('Bus', back_populates='stops')
 
     def __repr__(self):
         return f"<RouteStop {self.stop_name}, Order {self.order}>"
